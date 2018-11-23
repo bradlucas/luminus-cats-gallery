@@ -1,7 +1,8 @@
 (ns luminus-cats-gallery.routes.services
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [luminus-cats-gallery.cats :as c]))
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
@@ -11,8 +12,18 @@
                            :description "Sample Services"}}}}
   
   (context "/api" []
-    :tags ["thingie"]
+    :tags ["cats"]
     
+
+    ;; http://localhost:3000/api/cats?cnt=5
+    (GET "/cats" []
+         :query-params [cnt :- Long]
+         :summary "returns a collection of Cat image links"
+         :return [s/Str]
+         (ok (c/get-links cnt)))
+
+    (comment
+
     (GET "/plus" []
       :return       Long
       :query-params [x :- Long, {y :- Long 1}]
@@ -41,4 +52,6 @@
       :return      Long
       :header-params [x :- Long, y :- Long]
       :summary     "x^y with header-parameters"
-      (ok (long (Math/pow x y))))))
+      (ok (long (Math/pow x y))))
+      
+    )))
