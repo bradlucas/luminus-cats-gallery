@@ -42,12 +42,28 @@
     [:div.col-md-12
      [:img {:src "/img/warning_clojure.png"}]]]])
 
-(defn home-page []
-  [:div.container
-   (when-let [docs (:docs @session)]
-     [:div.row>div.col-sm-12
-      [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+;; (defn home-page []
+;;   [:div.container
+;;    (when-let [docs (:docs @session)]
+;;      [:div.row>div.col-sm-12
+;;       [:div {:dangerouslySetInnerHTML
+;;              {:__html (md->html docs)}}]])])
+
+(defn fetch-links! [links cnt] 
+  (GET "/api/cats" {:params {:cnt cnt}
+                    :handler #(reset! links %)}))
+
+(defn home-page [] 
+  (let [links (r/atom nil)] 
+    (fetch-links! links 20) 
+    (fn []
+      (if (not-empty @links)
+        [:div
+         [:h2 "Cats"]
+         [:ul {:class "list-group"}]
+         (for [link @links]
+           [:li {:class "list-group-item"} [:img {:src link}]])]
+        [:div "Standby for cats!"]))))
 
 (def pages
   {:home #'home-page
