@@ -16,3 +16,7 @@ profiles.clj
 +;; Commented out and checked as this project is a demonstration
 +;; dev-config.edn
 +;; test-config.edn
+
+
+.rebel_readline_history
+*.backup
